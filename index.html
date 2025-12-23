@@ -3,170 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRADUATION EXHIBITION | ANIMAL ENCYCLOPEDIA</title>
+    <title>Animal Encyclopedia | Grad Exhibition 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Noto+Sans+KR:wght@300;500&display=swap');
+        :root {
+            --bg-color: #f9f9f7;
+            --text-color: #1a1a1a;
+            --accent-color: #3d5a80;
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #0a0a0a; /* 깊은 숲이나 심해를 연상시키는 어두운 배경 */
-            color: #fff;
-            font-family: 'Syncopate', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Poppins', 'Noto Serif KR', serif;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* 전시 타이틀 레이아웃 */
-        .overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Navigation */
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(249, 249, 247, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; }
+
+        /* Hero Section */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            pointer-events: none; /* 텍스트가 마우스 인터랙션을 방해하지 않도록 함 */
-            z-index: 10;
+            padding: 0 10%;
         }
 
-        h1 {
-            font-size: 4rem;
-            letter-spacing: 15px;
-            margin: 0;
-            text-transform: uppercase;
-            background: linear-gradient(to right, #fff, #555);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-family: 'Noto Serif KR';
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1s forwards 0.5s;
         }
 
-        p {
-            font-size: 1rem;
+        .hero-subtitle {
+            font-size: 1.2rem;
             letter-spacing: 5px;
-            color: #888;
-            margin-top: 10px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.8s;
         }
 
-        canvas {
-            display: block;
+        /* Collection Grid */
+        .section-title {
+            padding: 5rem 5% 2rem;
+            font-size: 2rem;
+            border-bottom: 1px solid #ddd;
+            margin: 0 5% 3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 5% 5rem;
+        }
+
+        .card {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover img { transform: scale(1.05); filter: grayscale(100%); }
+
+        .card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding: 2rem;
+            color: white;
+            z-index: 2;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-info { opacity: 1; }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover::after { opacity: 1; }
+
+        /* Exhibition Info */
+        .info-panel {
+            background: var(--accent-color);
+            color: white;
+            padding: 5rem 10%;
+            text-align: center;
+        }
+
+        footer {
+            padding: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-<div class="overlay">
-    <h1>ANIMAL</h1>
-    <p>ENCYCLOPEDIA 2025 GRADUATION EXHIBITION</p>
-</div>
+    <nav>
+        <div class="logo">ANIMALIA 2025</div>
+        <div class="menu">ABOUT • EXHIBITS • VISIT</div>
+    </nav>
 
-<canvas id="canvas"></canvas>
+    <header>
+        <p class="hero-subtitle">Graduation Exhibition</p>
+        <h1 class="hero-title">숨겨진 백과사전</h1>
+        <p>기록되지 않은 동물들의 움직임을 디자인으로 재해석하다.</p>
+    </header>
 
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+    <h2 class="section-title">Collections</h2>
+    <div class="grid">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80" alt="Lion">
+            <div class="card-info">
+                <h3>01. Savannah</h3>
+                <p>맹수의 왕이 가진 우아한 직선의 미학</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1502613374442-3f2bc31bd665?auto=format&fit=crop&w=800&q=80" alt="Bird">
+            <div class="card-info">
+                <h3>02. Aviary</h3>
+                <p>하늘을 가르는 깃털의 패턴과 색채</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1557406230-ceddd451631e?auto=format&fit=crop&w=800&q=80" alt="Sea">
+            <div class="card-info">
+                <h3>03. Deep Blue</h3>
+                <p>심해 속 생명체가 내뿜는 신비로운 빛</p>
+            </div>
+        </div>
+    </div>
 
-let particles = [];
-const mouse = { x: null, y: null, radius: 180 };
+    <div class="info-panel">
+        <h2>2025. 11. 24 — 11. 30</h2>
+        <p>Seoul Design Gallery, 2F</p>
+        <p style="margin-top: 2rem; font-weight: 300;">당신이 몰랐던 동물의 이면을 경험하세요.</p>
+    </div>
 
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    init();
-});
+    <footer>
+        &copy; 2025 Your Name. Graduation Project Branding.
+    </footer>
 
-window.addEventListener('mousemove', (e) => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-});
-
-class Particle {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = Math.random() * 2 + 1;
-        this.baseX = this.x; // 원래 위치 기억
-        this.baseY = this.y;
-        this.density = (Math.random() * 30) + 1; // 움직임 밀도
-        this.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
-    }
-
-    draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    update() {
-        let dx = mouse.x - this.x;
-        let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-        let forceDirectionX = dx / distance;
-        let forceDirectionY = dy / distance;
-        let maxDistance = mouse.radius;
-        let force = (maxDistance - distance) / maxDistance;
-        let directionX = forceDirectionX * force * this.density;
-        let directionY = forceDirectionY * force * this.density;
-
-        if (distance < mouse.radius) {
-            this.x -= directionX;
-            this.y -= directionY;
-        } else {
-            if (this.x !== this.baseX) {
-                let dx = this.x - this.baseX;
-                this.x -= dx / 10;
-            }
-            if (this.y !== this.baseY) {
-                let dy = this.y - this.baseY;
-                this.y -= dy / 10;
-            }
-        }
-    }
-}
-
-function init() {
-    particles = [];
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // 격자 형태로 입자 배치
-    const step = 25; 
-    for (let y = 0; y < canvas.height; y += step) {
-        for (let x = 0; x < canvas.width; x += step) {
-            particles.push(new Particle(x, y));
-        }
-    }
-}
-
-function connect() {
-    for (let a = 0; a < particles.length; a++) {
-        for (let b = a; b < particles.length; b++) {
-            let dx = particles[a].x - particles[b].x;
-            let dy = particles[a].y - particles[b].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 30) { // 입자 사이의 거리가 가까우면 선 연결
-                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 30})`;
-                ctx.lineWidth = 0.5;
-                ctx.beginPath();
-                ctx.moveTo(particles[a].x, particles[a].y);
-                ctx.lineTo(particles[b].x, particles[b].y);
-                ctx.stroke();
-                ctx.closePath();
-            }
-        }
-    }
-}
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-    }
-    connect();
-    requestAnimationFrame(animate);
-}
-
-init();
-animate();
-</script>
 </body>
 </html>
