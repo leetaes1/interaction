@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Particle System</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* 배경을 검정색으로 설정 */
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let particles = [];
+const mouse = { x: null, y: null, radius: 100 };
+
+// 창 크기 조절 대응
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+});
+
+// 마우스 움직임 감지
+window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+// 클릭 시 밀어내는 반경 확대
+window.addEventListener('mousedown', () => {
+    mouse.radius = 200;
+});
+window.addEventListener('mouseup', () => {
+    mouse.radius = 100;
+});
+
+class Particle {
+    constructor(x, y, dx, dy, size, color) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.size = size;
+        this.color = color;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+
+    update() {
+        // 벽 충돌 감지
+        if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+            this.dx = -this.dx;
+        }
+        if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+            this.dy = -this.dy;
+        }
+
+        // 마우스와의 거리 계산 (피타고라스 정리)
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        // 마우스 근처에 오면 밀어내기
+        if (distance < mouse.radius) {
+            if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                this.x += 10;
+            }
+            if (mouse.x > this.x && this.x > this.size * 10) {
+                this.x -= 10;
+            }
+            if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                this.y += 10;
+            }
+            if (mouse.y > this.y && this.y > this.size * 10) {
+                this.y -= 10;
+            }
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw();
+    }
+}
+
+function init() {
+    particles = [];
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // 입자 개수 설정
+    let numberOfParticles = (canvas.height * canvas.width) / 9000;
+    for (let i = 0; i < numberOfParticles; i++) {
+        let size = (Math.random() * 5) + 2;
+        let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+        let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+        let dx = (Math.random() * 2) - 1;
+        let dy = (Math.random() * 2) - 1;
+        let color = '#ffffff';
+
+        particles.push(new Particle(x, y, dx, dy, size, color));
+    }
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+    }
+}
+
+init();
+animate();
+</script>
+</body>
+</html>
