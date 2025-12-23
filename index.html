@@ -2,19 +2,58 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Advanced Media Art Particle System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRADUATION EXHIBITION | ANIMAL ENCYCLOPEDIA</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Noto+Sans+KR:wght@300;500&display=swap');
+
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #000;
+            background-color: #0a0a0a; /* 깊은 숲이나 심해를 연상시키는 어두운 배경 */
+            color: #fff;
+            font-family: 'Syncopate', 'Noto Sans KR', sans-serif;
         }
+
+        /* 전시 타이틀 레이아웃 */
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none; /* 텍스트가 마우스 인터랙션을 방해하지 않도록 함 */
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 4rem;
+            letter-spacing: 15px;
+            margin: 0;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: #888;
+            margin-top: 10px;
+        }
+
         canvas {
             display: block;
         }
     </style>
 </head>
 <body>
+
+<div class="overlay">
+    <h1>ANIMAL</h1>
+    <p>ENCYCLOPEDIA 2025 GRADUATION EXHIBITION</p>
+</div>
 
 <canvas id="canvas"></canvas>
 
@@ -23,145 +62,107 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 let particles = [];
-const mouse = { x: null, y: null, radius: 150, active: false }; // 마우스 활성화 상태 추가
+const mouse = { x: null, y: null, radius: 180 };
 
-// 캔버스 크기 초기화 및 리사이즈 이벤트
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     init();
 });
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
-// 마우스 인터랙션
 window.addEventListener('mousemove', (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
 });
 
-window.addEventListener('mousedown', () => {
-    mouse.active = true;
-    mouse.radius = 200; // 클릭하면 더 넓은 범위로 영향
-});
-window.addEventListener('mouseup', () => {
-    mouse.active = false;
-    mouse.radius = 150;
-});
-
-// Particle 클래스 정의
 class Particle {
-    constructor(x, y, dx, dy, size, baseColor) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.dx = dx; // x축 속도
-        this.dy = dy; // y축 속도
-        this.size = size;
-        this.baseColor = baseColor; // 기본 색상
-        this.opacity = Math.random() * 0.8 + 0.2; // 투명도
-        this.mass = size; // 질량을 크기에 비례하게 설정
+        this.size = Math.random() * 2 + 1;
+        this.baseX = this.x; // 원래 위치 기억
+        this.baseY = this.y;
+        this.density = (Math.random() * 30) + 1; // 움직임 밀도
+        this.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
     }
 
     draw() {
+        ctx.fillStyle = this.color;
         ctx.beginPath();
-        // 시간에 따라 색상 변화를 위한 HSL 컬러 사용
-        const hue = (performance.now() * 0.01 + this.x * 0.1 + this.y * 0.05) % 360;
-        const saturation = 80;
-        const lightness = 60;
-        const color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${this.opacity})`;
-
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = color;
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
         ctx.fill();
     }
 
     update() {
-        // 벽 충돌 감지 및 반사
-        if (this.x + this.size > canvas.width || this.x - this.size < 0) {
-            this.dx = -this.dx * 0.9; // 속도 감소를 통한 에너지 손실 표현
-            if (this.x - this.size < 0) this.x = this.size;
-            if (this.x + this.size > canvas.width) this.x = canvas.width - this.size;
-        }
-        if (this.y + this.size > canvas.height || this.y - this.size < 0) {
-            this.dy = -this.dy * 0.9;
-            if (this.y - this.size < 0) this.y = this.size;
-            if (this.y + this.size > canvas.height) this.y = canvas.height - this.size;
-        }
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
 
-        // 중력 또는 척력 적용 (모든 입자 간 상호작용)
-        for (let i = 0; i < particles.length; i++) {
-            const other = particles[i];
-            if (this !== other) {
-                let dx = other.x - this.x;
-                let dy = other.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.size + other.size) { // 입자 간 충돌 (간단한 반발)
-                    this.dx = -this.dx;
-                    this.dy = -this.dy;
-                } else if (distance < 200) { // 일정 거리 이내에서는 약한 상호작용
-                    const force = 0.05 * (this.mass * other.mass) / (distance * distance); // 인력/척력 크기
-                    this.dx += (dx / distance) * force;
-                    this.dy += (dy / distance) * force;
-                }
+        if (distance < mouse.radius) {
+            this.x -= directionX;
+            this.y -= directionY;
+        } else {
+            if (this.x !== this.baseX) {
+                let dx = this.x - this.baseX;
+                this.x -= dx / 10;
+            }
+            if (this.y !== this.baseY) {
+                let dy = this.y - this.baseY;
+                this.y -= dy / 10;
             }
         }
-
-        // 마우스와의 인터랙션 (척력 효과)
-        if (mouse.active) {
-            let dx_mouse = mouse.x - this.x;
-            let dy_mouse = mouse.y - this.y;
-            let distance_mouse = Math.sqrt(dx_mouse * dx_mouse + dy_mouse * dy_mouse);
-
-            if (distance_mouse < mouse.radius) {
-                let force_mouse = 0.5 * (this.mass * mouse.radius) / (distance_mouse * distance_mouse);
-                if (distance_mouse < this.size) force_mouse = 10; // 아주 가까우면 강하게 밀어내기
-
-                // 마우스로부터 멀어지게 힘 적용 (척력)
-                this.dx -= (dx_mouse / distance_mouse) * force_mouse;
-                this.dy -= (dy_mouse / distance_mouse) * force_mouse;
-            }
-        }
-
-        // 속도 제한 (너무 빨라지지 않게)
-        const maxSpeed = 5;
-        this.dx = Math.max(-maxSpeed, Math.min(maxSpeed, this.dx));
-        this.dy = Math.max(-maxSpeed, Math.min(maxSpeed, this.dy));
-
-
-        this.x += this.dx;
-        this.y += this.dy;
-
-        this.draw();
     }
 }
 
-// 초기화 함수
 function init() {
     particles = [];
-    const numberOfParticles = (canvas.width * canvas.height) / 8000; // 화면 크기에 비례하여 입자 수 조절
-    for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 4) + 1; // 1 ~ 5
-        let x = Math.random() * (canvas.width - size * 2) + size;
-        let y = Math.random() * (canvas.height - size * 2) + size;
-        let dx = (Math.random() * 0.4) - 0.2; // -0.2 ~ 0.2
-        let dy = (Math.random() * 0.4) - 0.2;
-        let baseColor = `hsl(${Math.random() * 360}, 70%, 50%)`; // 초기 색상 무작위 HSL
-
-        particles.push(new Particle(x, y, dx, dy, size, baseColor));
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // 격자 형태로 입자 배치
+    const step = 25; 
+    for (let y = 0; y < canvas.height; y += step) {
+        for (let x = 0; x < canvas.width; x += step) {
+            particles.push(new Particle(x, y));
+        }
     }
 }
 
-// 애니메이션 루프
-function animate() {
-    requestAnimationFrame(animate);
-    // ctx.clearRect(0, 0, canvas.width, canvas.height); // 완전히 지우기 (선명)
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // 약간의 잔상을 남기며 지우기 (몽환적인 효과)
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function connect() {
+    for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+            let dx = particles[a].x - particles[b].x;
+            let dy = particles[a].y - particles[b].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
 
+            if (distance < 30) { // 입자 사이의 거리가 가까우면 선 연결
+                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 30})`;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
+        particles[i].draw();
     }
+    connect();
+    requestAnimationFrame(animate);
 }
 
 init();
