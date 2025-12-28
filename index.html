@@ -3,211 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FUTURE BOTANY | Artificial Bonsai Archive</title>
+    <title>NEO-EDEN | Artificial Botany Label</title>
     <style>
+        /* 기본 스타일 초기화 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --bg-color: #0f0f0f;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --accent-color: #00ffcc;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --bg: #0a0a0a;
+            --text-gold: #c5a47e; /* 은은한 골드 톤 */
+            --text-white: #f5f5f5;
+            --text-muted: #777;
+            --spacing: 80px;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-white);
+            font-family: 'Times New Roman', Times, serif, 'Noto Sans KR'; /* 클래식한 느낌 */
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        /* 배경 디자인 요소 */
-        body::before {
-            content: "";
+        /* 내비게이션 */
+        nav {
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: fixed;
-            top: -10%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        header {
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            letter-spacing: 10px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            font-weight: 200;
-        }
-
-        header p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .archive-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            padding: 20px;
-        }
-
-        .plant-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(10px);
         }
 
-        .plant-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent-color);
+        nav .logo {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            font-weight: bold;
+            color: var(--text-gold);
         }
 
-        .image-box {
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            background-color: #222;
+        /* 히어로 섹션 (브랜드 소개) */
+        header {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+            border-bottom: 1px solid #222;
+        }
+
+        header h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            font-size: 1.1rem;
+            word-break: keep-all;
+        }
+
+        /* 제품 리스트 섹션 */
+        .collection {
+            padding: var(--spacing) 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .section-title h2 {
+            font-size: 0.8rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            color: var(--text-gold);
+            margin-bottom: 10px;
+        }
+
+        /* 아이템 레이아웃 (지그재그 배치) */
+        .item {
             display: flex;
             align-items: center;
-            justify-content: center;
+            margin-bottom: 150px;
+            gap: 5%;
         }
 
-        .image-box img {
+        .item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .item-image {
+            flex: 1.2;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .item-image img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(20%);
-            transition: filter 0.4s ease;
-        }
-
-        .plant-card:hover .image-box img {
-            filter: grayscale(0%);
-        }
-
-        .content-box {
-            padding: 30px;
-        }
-
-        .tag {
-            font-size: 0.7rem;
-            color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            height: auto;
             display: block;
+            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+            filter: saturate(0.8);
         }
 
-        .plant-card h2 {
-            margin: 0 0 15px 0;
-            font-weight: 400;
-            font-size: 1.5rem;
+        .item:hover .item-image img {
+            transform: scale(1.05);
+            filter: saturate(1.1);
         }
 
-        .plant-card p {
-            color: var(--text-dim);
-            font-size: 0.95rem;
+        .item-info {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .item-info .number {
+            font-style: italic;
+            color: var(--text-gold);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .item-info h3 {
+            font-size: 2.5rem;
+            font-weight: 300;
             margin-bottom: 20px;
         }
 
-        .spec-table {
-            width: 100%;
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
+        .item-info p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 1rem;
         }
 
-        .spec-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .spec-label { color: var(--text-dim); }
-
+        /* 하단 정보 */
         footer {
+            padding: 100px 5%;
+            border-top: 1px solid #222;
             text-align: center;
-            padding: 100px 20px;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
         }
 
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .archive-container { grid-template-columns: 1fr; }
+        .footer-logo {
+            font-size: 2rem;
+            color: var(--text-gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--text-muted);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .item { flex-direction: column !important; text-align: center; margin-bottom: 80px; }
+            .item-info { padding: 40px 0; }
+            header h1 { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
 
+    <nav>
+        <div class="logo">NEO-EDEN</div>
+        <div style="font-size: 0.8rem; letter-spacing: 2px;">COLLECTION 2025</div>
+    </nav>
+
     <header>
-        <h1>Future Botany</h1>
-        <p>인공 식물 표본 아카이브: 디지털과 아날로그의 변주</p>
+        <h1>Artificial Eden</h1>
+        <p>네오-에덴은 자연의 유기적인 곡선과 현대 문명의 인공적 소재를 결합하여, 공간의 시각적 질서를 재정의하는 프리미엄 인공 식물 디자인 스튜디오입니다.</p>
     </header>
 
-    <main class="archive-container">
-        <article class="plant-card">
-            <div class="image-box">
-                <img src="d87c1c221de6aee04a00249aa01ef238.jpg" alt="Inflatable Bonsai">
-            </div>
-            <div class="content-box">
-                <span class="tag">Series 01: Pneumatic</span>
-                <h2>에어 인플레터블 분재</h2>
-                <p>공기를 주입하여 생명력을 얻는 투명하고 검은 비닐 소재의 분재입니다. 가벼움과 덧없음을 상징합니다.</p>
-                <div class="spec-table">
-                    <div class="spec-row"><span class="spec-label">Material</span><span>PVC / Air</span></div>
-                    <div class="spec-row"><span class="spec-label">Origin</span><span>Virtual Studio</span></div>
-                </div>
-            </div>
-        </article>
+    <main class="collection">
+        <div class="section-title">
+            <h2>Current Archive</h2>
+        </div>
 
-        <article class="plant-card">
-            <div class="image-box">
-                <img src="c02171d8bc6f20ac92ba08027dcda9cd.jpg" alt="Checkered Bonsai">
+        <section class="item">
+            <div class="item-image">
+                <img src="p1.jpg" alt="Pneumatic Form">
             </div>
-            <div class="content-box">
-                <span class="tag">Series 02: Pattern</span>
-                <h2>체크 패턴 레이어링</h2>
-                <p>평면적인 레이어와 디지털 체크 패턴이 결합된 형태입니다. 자연의 형태를 픽셀 단위로 분해하여 재구성했습니다.</p>
-                <div class="spec-table">
-                    <div class="spec-row"><span class="spec-label">Material</span><span>Layered Acrylic</span></div>
-                    <div class="spec-row"><span class="spec-label">Origin</span><span>Digital Forest</span></div>
-                </div>
+            <div class="item-info">
+                <span class="number">No. 01</span>
+                <h3>Pneumatic Form</h3>
+                <p>공기의 압력으로 유지되는 투명한 존재감. 팽창과 수축을 암시하는 이 형태는 살아있는 유기체의 호흡을 시각화합니다. 흑백의 대조는 빛과 그림자의 조화를 상징합니다.</p>
+                <div style="font-size: 0.8rem; color: #555;">Inflatable PVC / Matte Black Finish</div>
             </div>
-        </article>
+        </section>
 
-        <article class="plant-card">
-            <div class="image-box">
-                <img src="f57c980a476c4fc689600965f06af9eb.jpg" alt="Metallic Pop Art Bonsai">
+        <section class="item">
+            <div class="item-image">
+                <img src="p2.jpg" alt="Digitalized Pine">
             </div>
-            <div class="content-box">
-                <span class="tag">Series 03: Metalic</span>
-                <h2>실버 크롬 팝아트 분재</h2>
-                <p>금속 질감의 줄기와 스펀지 형태의 잎을 가진 강렬한 대비의 작품입니다. 산업 재료와 예술적 곡선의 결합을 보여줍니다.</p>
-                <div class="spec-table">
-                    <div class="spec-row"><span class="spec-label">Material</span><span>Aluminum / Foam</span></div>
-                    <div class="spec-row"><span class="spec-label">Origin</span><span>Neo-Tokyo</span></div>
-                </div>
+            <div class="item-info">
+                <span class="number">No. 02</span>
+                <h3>Digitalized Pine</h3>
+                <p>전통적 분재의 선(線)을 픽셀 데이터로 치환했습니다. 체크 패턴의 레이어는 자연이 디지털 환경으로 전이되었을 때 나타나는 아름다운 왜곡을 표현합니다.</p>
+                <div style="font-size: 0.8rem; color: #555;">Patterned Acrylic / Layered Structure</div>
             </div>
-        </article>
+        </section>
+
+        <section class="item">
+            <div class="item-image">
+                <img src="p3.jpg" alt="Industrial Growth">
+            </div>
+            <div class="item-info">
+                <span class="number">No. 03</span>
+                <h3>Industrial Growth</h3>
+                <p>차가운 금속의 질감과 거친 스펀지 텍스처의 만남. 산업 사회의 재료들이 만들어내는 기묘한 생명력은 미래 도시의 새로운 정원을 제시합니다.</p>
+                <div style="font-size: 0.8rem; color: #555;">Polished Aluminum / Synthetic Moss</div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        &copy; 2024 FUTURE BOTANY ARCHIVE. ALL RIGHTS RESERVED.
+        <span class="footer-logo">NEO-EDEN</span>
+        <p style="margin-bottom: 20px; font-size: 0.9rem; color: #555;">Nature, Re-imagined.</p>
+        <a href="#" class="contact">Request Portfolio</a>
     </footer>
 
 </body>
