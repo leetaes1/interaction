@@ -90,3 +90,125 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: grayscale(20%);
+            transition: filter 0.4s ease;
+        }
+
+        .plant-card:hover .image-box img {
+            filter: grayscale(0%);
+        }
+
+        .content-box {
+            padding: 30px;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .plant-card h2 {
+            margin: 0 0 15px 0;
+            font-weight: 400;
+            font-size: 1.5rem;
+        }
+
+        .plant-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .spec-table {
+            width: 100%;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .spec-label { color: var(--text-dim); }
+
+        footer {
+            text-align: center;
+            padding: 100px 20px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .archive-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Future Botany</h1>
+        <p>인공 식물 표본 아카이브: 디지털과 아날로그의 변주</p>
+    </header>
+
+    <main class="archive-container">
+        <article class="plant-card">
+            <div class="image-box">
+                <img src="d87c1c221de6aee04a00249aa01ef238.jpg" alt="Inflatable Bonsai">
+            </div>
+            <div class="content-box">
+                <span class="tag">Series 01: Pneumatic</span>
+                <h2>에어 인플레터블 분재</h2>
+                <p>공기를 주입하여 생명력을 얻는 투명하고 검은 비닐 소재의 분재입니다. 가벼움과 덧없음을 상징합니다.</p>
+                <div class="spec-table">
+                    <div class="spec-row"><span class="spec-label">Material</span><span>PVC / Air</span></div>
+                    <div class="spec-row"><span class="spec-label">Origin</span><span>Virtual Studio</span></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="plant-card">
+            <div class="image-box">
+                <img src="c02171d8bc6f20ac92ba08027dcda9cd.jpg" alt="Checkered Bonsai">
+            </div>
+            <div class="content-box">
+                <span class="tag">Series 02: Pattern</span>
+                <h2>체크 패턴 레이어링</h2>
+                <p>평면적인 레이어와 디지털 체크 패턴이 결합된 형태입니다. 자연의 형태를 픽셀 단위로 분해하여 재구성했습니다.</p>
+                <div class="spec-table">
+                    <div class="spec-row"><span class="spec-label">Material</span><span>Layered Acrylic</span></div>
+                    <div class="spec-row"><span class="spec-label">Origin</span><span>Digital Forest</span></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="plant-card">
+            <div class="image-box">
+                <img src="f57c980a476c4fc689600965f06af9eb.jpg" alt="Metallic Pop Art Bonsai">
+            </div>
+            <div class="content-box">
+                <span class="tag">Series 03: Metalic</span>
+                <h2>실버 크롬 팝아트 분재</h2>
+                <p>금속 질감의 줄기와 스펀지 형태의 잎을 가진 강렬한 대비의 작품입니다. 산업 재료와 예술적 곡선의 결합을 보여줍니다.</p>
+                <div class="spec-table">
+                    <div class="spec-row"><span class="spec-label">Material</span><span>Aluminum / Foam</span></div>
+                    <div class="spec-row"><span class="spec-label">Origin</span><span>Neo-Tokyo</span></div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        &copy; 2024 FUTURE BOTANY ARCHIVE. ALL RIGHTS RESERVED.
+    </footer>
+
+</body>
+</html>
