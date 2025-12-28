@@ -3,192 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal Encyclopedia | Grad Exhibition 2025</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <title>FUTURE BOTANY | Artificial Bonsai Archive</title>
     <style>
         :root {
-            --bg-color: #f9f9f7;
-            --text-color: #1a1a1a;
-            --accent-color: #3d5a80;
-            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            --bg-color: #0f0f0f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-color: #00ffcc;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Poppins', 'Noto Serif KR', serif;
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        /* Navigation */
-        nav {
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* 배경 디자인 요소 */
+        body::before {
+            content: "";
             position: fixed;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(249, 249, 247, 0.8);
+            top: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 204, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        header {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 200;
+        }
+
+        header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .archive-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .plant-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.4s ease, border-color 0.4s ease;
             backdrop-filter: blur(10px);
         }
 
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; }
-
-        /* Hero Section */
-        header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 10%;
+        .plant-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
         }
 
-        .hero-title {
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-family: 'Noto Serif KR';
-            margin-bottom: 1rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeIn 1s forwards 0.5s;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            opacity: 0;
-            animation: fadeIn 1s forwards 0.8s;
-        }
-
-        /* Collection Grid */
-        .section-title {
-            padding: 5rem 5% 2rem;
-            font-size: 2rem;
-            border-bottom: 1px solid #ddd;
-            margin: 0 5% 3rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 0 5% 5rem;
-        }
-
-        .card {
-            position: relative;
+        .image-box {
+            width: 100%;
+            height: 400px;
             overflow: hidden;
-            aspect-ratio: 3/4;
-            background: #eee;
-            cursor: pointer;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .card img {
+        .image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .card:hover img { transform: scale(1.05); filter: grayscale(100%); }
-
-        .card-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            padding: 2rem;
-            color: white;
-            z-index: 2;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .card:hover .card-info { opacity: 1; }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .card:hover::after { opacity: 1; }
-
-        /* Exhibition Info */
-        .info-panel {
-            background: var(--accent-color);
-            color: white;
-            padding: 5rem 10%;
-            text-align: center;
-        }
-
-        footer {
-            padding: 3rem;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <div class="logo">ANIMALIA 2025</div>
-        <div class="menu">ABOUT • EXHIBITS • VISIT</div>
-    </nav>
-
-    <header>
-        <p class="hero-subtitle">Graduation Exhibition</p>
-        <h1 class="hero-title">숨겨진 백과사전</h1>
-        <p>기록되지 않은 동물들의 움직임을 디자인으로 재해석하다.</p>
-    </header>
-
-    <h2 class="section-title">Collections</h2>
-    <div class="grid">
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80" alt="Lion">
-            <div class="card-info">
-                <h3>01. Savannah</h3>
-                <p>맹수의 왕이 가진 우아한 직선의 미학</p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1502613374442-3f2bc31bd665?auto=format&fit=crop&w=800&q=80" alt="Bird">
-            <div class="card-info">
-                <h3>02. Aviary</h3>
-                <p>하늘을 가르는 깃털의 패턴과 색채</p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1557406230-ceddd451631e?auto=format&fit=crop&w=800&q=80" alt="Sea">
-            <div class="card-info">
-                <h3>03. Deep Blue</h3>
-                <p>심해 속 생명체가 내뿜는 신비로운 빛</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="info-panel">
-        <h2>2025. 11. 24 — 11. 30</h2>
-        <p>Seoul Design Gallery, 2F</p>
-        <p style="margin-top: 2rem; font-weight: 300;">당신이 몰랐던 동물의 이면을 경험하세요.</p>
-    </div>
-
-    <footer>
-        &copy; 2025 Your Name. Graduation Project Branding.
-    </footer>
-
-</body>
-</html>
